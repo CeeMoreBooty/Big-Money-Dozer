@@ -62,7 +62,7 @@ fun VpnQuickToggle(
                 )
                 if (vpnStatus) {
                     Text(
-                        text = "↓${formatBytes(bytesReceived)} ↑${formatBytes(bytesSent)}",
+                        text = "↓${VpnUtils.formatBytes(bytesReceived)} ↑${VpnUtils.formatBytes(bytesSent)}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
                     )
@@ -96,11 +96,4 @@ fun VpnQuickToggle(
 /**
  * Format bytes to human-readable format
  */
-private fun formatBytes(bytes: Long): String {
-    return when {
-        bytes < 1024 -> "$bytes B"
-        bytes < 1024 * 1024 -> String.format("%.1f KB", bytes / 1024.0)
-        bytes < 1024 * 1024 * 1024 -> String.format("%.1f MB", bytes / (1024.0 * 1024.0))
-        else -> String.format("%.1f GB", bytes / (1024.0 * 1024.0 * 1024.0))
-    }
-}
+private fun formatBytes(bytes: Long): String = VpnUtils.formatBytes(bytes)

@@ -177,48 +177,48 @@ class ProxyServer(private val port: Int = 8080) {
             clientOutput.flush()
 
             // Start bidirectional data transfer
-            val clientToServer = launch(Dispatchers.IO) {
-                try {
-                    val buffer = ByteArray(8192)
-                    val clientInput = clientSocket.getInputStream()
-                    val serverOutput = serverSocket.getOutputStream()
-                    
-                    var bytesRead: Int
-                    while (clientSocket.isConnected && serverSocket.isConnected) {
-                        bytesRead = clientInput.read(buffer)
-                        if (bytesRead == -1) break
+            coroutineScope {
+                val clientToServer = launch(Dispatchers.IO) {
+                    try {
+                        val buffer = ByteArray(8192)
+                        val clientInput = clientSocket.getInputStream()
+                        val serverOutput = serverSocket.getOutputStream()
                         
-                        serverOutput.write(buffer, 0, bytesRead)
-                        serverOutput.flush()
-                        totalBytesOut += bytesRead
+                        var bytesRead: Int
+                        while (clientSocket.isConnected && serverSocket.isConnected) {
+                            bytesRead = clientInput.read(buffer)
+                            if (bytesRead == -1) break
+                            
+                            serverOutput.write(buffer, 0, bytesRead)
+                            serverOutput.flush()
+                            totalBytesOut += bytesRead
+                        }
+                    } catch (e: Exception) {
+                        Log.d(TAG, "Client to server transfer ended: ${e.message}")
                     }
-                } catch (e: Exception) {
-                    Log.d(TAG, "Client to server transfer ended: ${e.message}")
                 }
-            }
 
-            val serverToClient = launch(Dispatchers.IO) {
-                try {
-                    val buffer = ByteArray(8192)
-                    val serverInput = serverSocket.getInputStream()
-                    val clientOut = clientSocket.getOutputStream()
-                    
-                    var bytesRead: Int
-                    while (clientSocket.isConnected && serverSocket.isConnected) {
-                        bytesRead = serverInput.read(buffer)
-                        if (bytesRead == -1) break
+                val serverToClient = launch(Dispatchers.IO) {
+                    try {
+                        val buffer = ByteArray(8192)
+                        val serverInput = serverSocket.getInputStream()
+                        val clientOut = clientSocket.getOutputStream()
                         
-                        clientOut.write(buffer, 0, bytesRead)
-                        clientOut.flush()
-                        totalBytesIn += bytesRead
+                        var bytesRead: Int
+                        while (clientSocket.isConnected && serverSocket.isConnected) {
+                            bytesRead = serverInput.read(buffer)
+                            if (bytesRead == -1) break
+                            
+                            clientOut.write(buffer, 0, bytesRead)
+                            clientOut.flush()
+                            totalBytesIn += bytesRead
+                        }
+                    } catch (e: Exception) {
+                        Log.d(TAG, "Server to client transfer ended: ${e.message}")
                     }
-                } catch (e: Exception) {
-                    Log.d(TAG, "Server to client transfer ended: ${e.message}")
                 }
-            }
 
-            // Wait for both transfers to complete
-            runBlocking {
+                // Wait for both transfers to complete
                 clientToServer.join()
                 serverToClient.join()
             }
