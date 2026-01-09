@@ -11,8 +11,6 @@ import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.ceemoreboty.bigmoneydozer.MainActivity
-import com.ceemoreboty.bigmoneydozer.R
 import kotlinx.coroutines.*
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -293,13 +291,18 @@ class ProxyVpnService : VpnService() {
      * Create notification for the foreground service
      */
     private fun createNotification(contentText: String): Notification {
-        val intent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        // Create an intent that opens the app when notification is tapped
+        val intent = packageManager.getLaunchIntentForPackage(packageName)
+        val pendingIntent = if (intent != null) {
+            PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        } else {
+            null
+        }
 
         val stopIntent = Intent(this, ProxyVpnService::class.java).apply {
             action = ACTION_STOP

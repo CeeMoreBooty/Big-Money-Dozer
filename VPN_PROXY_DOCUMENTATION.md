@@ -78,6 +78,43 @@ The following permissions are required in AndroidManifest.xml:
 
 ## Usage
 
+### Quick Toggle Widget
+
+The easiest way to integrate VPN functionality into your app is using the VpnQuickToggle composable:
+
+```kotlin
+import com.ceemoreboty.bigmoneydozer.vpn.VpnQuickToggle
+
+@Composable
+fun YourScreen() {
+    Column {
+        // Your screen content
+        
+        // Add VPN toggle widget
+        VpnQuickToggle(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
+    }
+}
+```
+
+### Full Configuration Screen
+
+For complete control, use the VpnConfigScreen:
+
+```kotlin
+import com.ceemoreboty.bigmoneydozer.vpn.VpnConfigScreen
+
+// In your navigation setup
+composable("vpn_settings") {
+    VpnConfigScreen(
+        onNavigateBack = { /* handle navigation */ }
+    )
+}
+```
+
 ### Starting the VPN
 
 ```kotlin
@@ -182,7 +219,8 @@ You can test the proxy server by configuring your device or another app to use:
 app/src/main/java/com/ceemoreboty/bigmoneydozer/vpn/
 ├── ProxyVpnService.kt      # Main VPN service
 ├── ProxyServer.kt          # Proxy server implementation
-├── VpnConfigScreen.kt      # UI configuration screen
+├── VpnConfigScreen.kt      # Full configuration UI screen
+├── VpnQuickToggle.kt       # Quick toggle widget component
 └── VpnManager.kt           # VPN state manager
 ```
 
