@@ -14,6 +14,7 @@ Big Money Dozer is a classic arcade-style coin pusher game that combines strateg
 - **Progressive Difficulty**: Game mechanics intensify as you advance
 - **Score Tracking**: Keep track of your best performances
 - **Smooth Graphics**: Enjoy polished, smooth animations
+- **VPN & Proxy Server**: Built-in VPN service combined with local proxy server for secure network connections
 
 ## Gameplay
 
@@ -56,6 +57,14 @@ Contributions are welcome! If you'd like to contribute to Big Money Dozer, pleas
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+## VPN & Proxy Server
+
+The app includes a built-in VPN and proxy server feature. See [VPN_PROXY_DOCUMENTATION.md](VPN_PROXY_DOCUMENTATION.md) for detailed information about:
+- Architecture and implementation
+- Usage instructions
+- Security considerations
+- Testing procedures
 
 ## License
 
